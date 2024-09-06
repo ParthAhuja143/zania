@@ -101,3 +101,14 @@ This project provides a simple full-stack application using **React**, **TypeScr
 ├── docker-compose.yml            # Docker Compose configuration for the entire application
 ├── README.md                     # Project documentation
 └── tsconfig.json                 # TypeScript configuration file
+
+Architectural / API Design Approach
+When approaching the design of this full-stack application, my primary focus was on ensuring simplicity, scalability, and maintainability. Here’s a breakdown of the design approach:
+
+Separation of Concerns: I followed a clear separation of responsibilities between the frontend and backend to ensure that each layer could evolve independently. The frontend handled the UI interactions and the data display, while the backend API was responsible for data management and business logic.
+
+Local Data Persistence: To meet the requirement of data permanence across reloads, I leveraged the browser's localStorage. This allows the application to persist user data (like the JSON cards) locally, reducing the need for frequent server requests. The application initializes localStorage with default data if not present and retrieves, updates, or adds data as needed.
+
+REST API Design: I created a RESTful interface that simulates server-like data fetching using local storage. This approach ensures that data manipulation (fetching, adding new cards) could happen through an API structure, which could later be extended to communicate with a real backend server. The API follows standard REST conventions to keep the structure clean and intuitive.
+
+Data Flow: The frontend interacts with this API to fetch, display, and manage the data dynamically. By structuring the API this way, I’ve made it possible to easily swap out the local storage API for a remote server later on, without requiring significant changes to the frontend.
