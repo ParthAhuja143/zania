@@ -12,7 +12,7 @@ This project provides a simple full-stack application using **React**, **TypeScr
 ## Project Structure
 
 ```bash
-/project-root                   # Frontend application directory
+/project-root                     # Frontend application directory
 │   ├── /public                   # Public assets
 │   │   ├── favicon.ico           # Favicon for the app
 │   │   ├── index.html            # Main HTML file
