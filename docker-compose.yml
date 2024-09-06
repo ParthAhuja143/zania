@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    ports:
+      - "3000:80" # Map port 80 in the container to port 3000 on the host
+    environment:
+      - NODE_ENV=development # Set the environment to development
+    volumes:
+      - ./frontend:/app # Mount the frontend directory for live reloading
+      - /app/node_modules # Prevent overwriting node_modules in the container
