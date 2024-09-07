@@ -48,7 +48,7 @@
   },
   "devDependencies": {
     "@types/react-motion": "^0.0.40",
-    "msw": "^2.4.2"
+    "msw": "2.1.4"
   },
   "msw": {
     "workerDirectory": [
