@@ -1,9 +1,46 @@
+#root {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  flex-direction: row;
+}
+
+.sidebar {
+  height: calc(100vh - 20px);
+  overflow: scroll;
+  background-color: #5816f31a;
+  padding: 10px;
+  width: 200px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-direction: column;
+}
+
+.log-item {
+  color: rgb(38, 0, 119) !important;
+  background-color: #ccbff2 !important;
+  margin: 5px 10px;
+  padding: 10px;
+  font-size: 12px;
+  border-radius: 3px 3px 3px 3px;
+  width: calc(100% - 40px);
+
+}
+
 .app {
   display: flex;
   flex-direction: column;
   align-items: center;
-  font-family: Verdana, Geneva, Tahoma, sans-serif;
   margin: 15px;
+  width: calc(100% - 200px);
+}
+
+html, body {
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 .grid {

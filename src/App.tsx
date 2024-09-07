@@ -16,6 +16,7 @@ const App: React.FC = () => {
   const [overlayImage, setOverlayImage] = useState<string | null>(null);
   const [changesMade, setChangesMade] = useState(false);
   const [currTime, setCurrTime] = useState(Date.now());
+  const [logs, setLogs] = useState<string[]>([]);
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -38,6 +39,7 @@ const App: React.FC = () => {
     changesMade,
     () => {
       setChangesMade(false);
+      setLogs([...logs, new Date().toLocaleTimeString()])
     }
   );
 
@@ -71,6 +73,12 @@ const App: React.FC = () => {
 
   return (
     <DndProvider backend={HTML5Backend}>
+      <div className="sidebar">
+        <h3 className="log-header">Save Logs</h3>
+        {
+          logs.map(log => <div className="log-item" key={log}>{log}</div>)
+        }
+      </div>
       <div className="app">
         {fetchingLoading && <div>Loading cards...</div>}
         <div className={`overlay ${savingLoading ? "show" : ""}`}>
@@ -110,7 +118,7 @@ const App: React.FC = () => {
           ))}
         </div>
         {overlayImage && (
-          <div className="overlay" onClick={() => setOverlayImage(null)}>
+          <div className={`overlay ${overlayImage ? 'show' : ''}`} onClick={() => setOverlayImage(null)}>
             <ImageLoader
               src={overlayImage}
               alt={overlayImage}

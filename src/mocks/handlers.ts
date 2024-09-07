@@ -92,7 +92,7 @@ export const handlers = [
   ),
 
   http.put<any, PutReqBody, PostResponseType>(
-    "/api/cards/",
+    "/api/cards",
     async ({ request, params }) => {
         console.log('[PUT CALLED]')
       const newCard = await request.json();

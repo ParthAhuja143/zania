@@ -1,3 +1,4 @@
+import React from 'react';
 import { useDrag, useDrop } from "react-dnd";
 import ImageLoader from "../ImageLoader";
 import { CardProps } from "../../interfaces";
