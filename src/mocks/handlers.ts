@@ -84,7 +84,7 @@ export const handlers = [
   http.post<any, PostReqBody, PostResponseType>(
     "/api/cards",
     async ({ request, params }) => {
-        console.log('[POST CALLED]')
+      console.log('[POST CALLED]')
       const newCard = await request.json();
       addDataToLocalStorage(newCard);
       return HttpResponse.json({ success: true });
