@@ -1,7 +1,11 @@
 ## Overview
+
 This project provides a simple full-stack application using **React**, **TypeScript**, and **localStorage** for data persistence. The goal is to manage document cards (like Bank Draft, Invoice, etc.) and store them in the browser's `localStorage` for data permanence across page reloads. A mocked REST API is used to fetch and add data to `localStorage`.
 
+> **NOTE**: Service workers in a dockerized environment need an SSL certificate, which is not possible for the project currently. Hence, the APIs don't work in the dockerized environment due to service workers not being registered. Kindly test in development mode.
+
 ## Table of Contents
+
 - [Overview](#overview)
 - [Project Structure](#project-structure)
 - [Features](#features)
@@ -60,11 +64,13 @@ This project provides a simple full-stack application using **React**, **TypeScr
 
 2. **Card Display**: Each card is displayed with a thumbnail image, and a loading spinner is shown while the image is loading. This enhances the user experience by providing visual feedback during data fetching.
 
-3. **Drag-and-Drop Functionality**: Users can reorder the cards using drag-and-drop. This feature allows for intuitive organization of documents, making it easier for users to manage their data.
+3. **Drag-and-Drop Functionality**: Users can reorder the cards using drag-and-drop. This feature allows for intuitive organization of documents, making it easier for users to manage their data. The position is saved to localstorage to be persistent on refresh.
 
 4. **Image Overlay**: Clicking on a card opens an overlay displaying the associated image. Pressing the ESC key closes the overlay, providing a simple way to view document details without navigating away from the main interface.
 
 5. **Mock Service Worker**: For frontend development, MSW is used to mock API responses, allowing for local data persistence. This enables developers to work with realistic data without needing a live backend, streamlining the development process.
+
+6. **Logs**: Now users can see logs on the side for every successfull save call to the mock API, please note that save is not triggerred if there are no changes in the ordering. 
 
 > **NOTE**: Service workers in a dockerized environment need an SSL certificate, which is not possible for the project currently. Hence, the APIs don't work in the dockerized environment due to service workers not being registered. Kindly test in development mode.
 
@@ -89,12 +95,14 @@ These endpoints provide a simple RESTful interface for managing document data, a
 ### Frontend Setup
 
 1. **Clone the Repository**:
+
    ```bash
    git clone https://github.com/ParthAhuja143/zania.git
    cd zania
    ```
 
 2. **Install Dependencies**:
+
    ```bash
    npm install
    ```
@@ -106,6 +114,7 @@ These endpoints provide a simple RESTful interface for managing document data, a
    Open your browser and go to `http://localhost:3000` to view the application.
 
 ## Architectural / API Design Approach
+
 When approaching the design of this full-stack application, my primary focus was on ensuring simplicity, scalability, and maintainability. Here’s a breakdown of the design approach:
 
 1. Separation of Concerns: I followed a clear separation of responsibilities between the frontend features to ensure that each layer could evolve independently.
@@ -114,37 +123,42 @@ When approaching the design of this full-stack application, my primary focus was
 
 3. REST API Design: I created a RESTful interface that simulates server-like data fetching using local storage. This approach ensures that data manipulation (fetching, adding new cards) could happen through an API structure, which could later be extended to communicate with a real backend server. The API follows standard REST conventions to keep the structure clean and intuitive.
 
-5. Data Flow: The frontend interacts with this API to fetch, display, and manage the data dynamically. By structuring the API this way, I’ve made it possible to easily swap out the local storage API for a remote server later on, without requiring significant changes to the frontend.
+4. Data Flow: The frontend interacts with this API to fetch, display, and manage the data dynamically. By structuring the API this way, I’ve made it possible to easily swap out the local storage API for a remote server later on, without requiring significant changes to the frontend.
 
 ## Hypothetical API Design
 
 ### General Principles
 
 1. RESTful Structure: The API will be structured following RESTful conventions, using standard HTTP methods like GET, POST, PUT, and DELETE.
-Consistency: Adhering to consistent naming conventions and URL patterns will make the API intuitive for developers to use and extend.
+   Consistency: Adhering to consistent naming conventions and URL patterns will make the API intuitive for developers to use and extend.
 2. Versioning: Incorporating versioning early on (e.g., /api/v1/) will allow for future updates and backward compatibility without breaking existing functionality.
 3. Modular & Extensible: Each feature (add, remove, update) will be implemented as separate, self-contained endpoints to facilitate future expansion.
 
 ### Endpoints Overview
+
 #### Get All Items
 
 1. **Endpoint**: GET `/api/v1/cards`
 2. **Description**: Retrieves all the cards stored in localStorage or database (if later extended).
-Response:
+   Response:
 
 ```json
 {
   "status": "success",
   "data": [
     {
+      "id": "0",
       "type": "bank-draft",
       "title": "Bank Draft",
-      "position": 0
+      "position": 0,
+      "src" "https://example.com/item.png"
     },
     {
+      "id": "1",
       "type": "bill-of-lading",
       "title": "Bill of Lading",
-      "position": 1
+      "position": 1,
+      "src" "https://example.com/item.png"
     }
   ]
 }
@@ -161,7 +175,8 @@ Request Payload:
 {
   "type": "bank-draft-2",
   "title": "Bank Draft 2",
-  "position": 3
+  "position": 3,
+  "src" "https://example.com/item.png" // assuming that the user can upload only the URL and not a file/blob
 }
 ```
 
@@ -172,9 +187,11 @@ Response:
   "status": "success",
   "message": "New card added successfully",
   "data": {
+    "id": "3",
     "type": "bank-draft-2",
     "title": "Bank Draft 2",
-    "position": 3
+    "position": 3,
+    "src" "https://example.com/item.png"
   }
 }
 ```
@@ -183,12 +200,14 @@ Response:
 
 1. **Endpoint:** PUT `/api/v1/cards/:id`
 2. **Description:** Updates an existing card based on its ID.
-Request Payload:
+   Request Payload:
 
 ```json
 {
   "title": "Updated Bank Draft",
-  "position": 2
+  "type": "bank-draft-2",
+  "position": 2,
+  "src" "https://example.com/item.png"
 }
 ```
 
@@ -199,9 +218,11 @@ Response:
   "status": "success",
   "message": "Card updated successfully",
   "data": {
-    "type": "bank-draft",
+    "id": "3",
     "title": "Updated Bank Draft",
-    "position": 2
+    "type": "bank-draft-2",
+    "position": 2,
+    "src" "https://example.com/item.png"
   }
 }
 ```
@@ -210,7 +231,7 @@ Response:
 
 1. **Endpoint:** DELETE `/api/v1/cards/:id`
 2. **Description:** Removes a card from the list based on its ID.
-Response:
+   Response:
 
 ```json
 {
@@ -229,9 +250,9 @@ Request Payload:
 ```json
 {
   "positions": [
-    {"id": 1, "position": 0},
-    {"id": 2, "position": 1},
-    {"id": 3, "position": 2}
+    { "id": 1, "position": 0 },
+    { "id": 2, "position": 1 },
+    { "id": 3, "position": 2 }
   ]
 }
 ```
@@ -246,6 +267,7 @@ Response:
 ```
 
 #### Key Considerations for Long-Term Maintenance
+
 1. Versioning: The API starts with /api/v1/ to ensure future iterations can co-exist with older versions without causing breaking changes.
 
 2. Scalability: The API is designed to be extended easily. Future enhancements could include pagination, filtering, or more advanced querying options.
